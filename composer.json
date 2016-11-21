@@ -1,11 +1,11 @@
 {
-    "name": "akutaktau/CakeSocial",
+    "name": "hacrone/CakeSocial",
     "description": "CakeSocial plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.4.16",
         "cakephp/cakephp": "~3.0",
-		"facebook/php-sdk-v4": "~5.0"
+	"facebook/php-sdk-v4": "~5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
