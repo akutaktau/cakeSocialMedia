@@ -178,16 +178,16 @@ class TwitterComponent extends Component
 			$connect = new TwitterOAuth($this->getAppId(), $this->getAppSecret(), $access_token['oauth_token'], $access_token['oauth_token_secret']);
 			/**
 			 * Parameters
-			 * status 						(required)
-			 * in_reply_to_status_id		(optional)
-			 * possibly_sensitive			(optional)
-			 * lat							(optional)
-			 * long 						(optional)
-			 * place_id 					(optional)
-			 * display_coordinates			(optional)
-			 * trim_user 					(optional)
-			 * in_reply_to_status_id		(optional)
-			 * media_ids					(optional)
+			 * status                  (required)
+			 * in_reply_to_status_id   (optional)
+			 * possibly_sensitive      (optional)
+			 * lat                     (optional)
+			 * long                    (optional)
+			 * place_id                (optional)
+			 * display_coordinates     (optional)
+			 * trim_user               (optional)
+			 * in_reply_to_status_id   (optional)
+			 * media_ids               (optional)
 			 * 
 			 *** Read more: https://dev.twitter.com/rest/reference/post/statuses/update
 			 */
