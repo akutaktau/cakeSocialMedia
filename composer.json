@@ -1,5 +1,5 @@
 {
-    "name": "akutaktau/CakeSocial",
+    "name": "akutaktau/cake-social",
     "description": "CakeSocial plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
