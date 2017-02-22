@@ -1,6 +1,6 @@
 {
-    "name": "akutaktau/cake-social",
-    "description": "CakeSocial plugin for CakePHP",
+    "name": "akutaktau/cake-social-media",
+    "description": "CakeSocialMedia plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.4.16",
@@ -14,12 +14,12 @@
 	
     "autoload": {
         "psr-4": {
-            "CakeSocial\\": "src"
+            "CakeSocialMedia\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CakeSocial\\Test\\": "tests",
+            "CakeSocialMedia\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }
