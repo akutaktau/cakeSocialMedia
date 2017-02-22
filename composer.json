@@ -1,5 +1,5 @@
 {
-    "name": "hacrone/CakeSocial",
+    "name": "akutaktau/CakeSocial",
     "description": "CakeSocial plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
