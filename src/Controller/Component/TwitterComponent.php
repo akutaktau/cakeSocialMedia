@@ -6,7 +6,7 @@
  * @copyright (c) 2016 syarman.com/soft
  * @license MIT
  */
-namespace CakeSocial\Controller\Component;
+namespace CakeSocialMedia\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
