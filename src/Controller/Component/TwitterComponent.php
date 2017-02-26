@@ -71,7 +71,7 @@ class TwitterComponent extends Component
 			$this->loadConfig();
 		}
 
-		if (!$session->check('twitter.access_token')) {
+		if (!$session->check('twitter.access_token') || !$this->validate()) {
 			$connect = new TwitterOAuth(
 				$this->_config['twitter']['app_id'],
 				$this->_config['twitter']['app_secret']
