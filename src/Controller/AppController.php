@@ -1,6 +1,6 @@
 <?php
 
-namespace CakeSocial\Controller;
+namespace CakeSocialMedia\Controller;
 
 use App\Controller\AppController as BaseController;
 
