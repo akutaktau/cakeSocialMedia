@@ -47,7 +47,7 @@ class TwitterComponent extends Component
 			parent::initialize($this->_config);
 			$this->Controller = $this->_registry->getController();
 			$this->Controller->helpers = [
-				'CakeSocial.Twitter' => [
+				'CakeSocialMedia.Twitter' => [
 					'enable' => $this->_config['twitter']['enable'],
 					'app_id' => $this->_config['twitter']['app_id'],
 					'app_secret' => $this->_config['twitter']['app_secret'],
