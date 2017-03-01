@@ -3,8 +3,8 @@ use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
 Router::plugin(
-    'CakeSocial',
-    ['path' => '/cake-social'],
+    'CakeSocialMedia',
+    ['path' => '/cake-social-media'],
     function (RouteBuilder $routes) {
         $routes->fallbacks('DashedRoute');
     }
