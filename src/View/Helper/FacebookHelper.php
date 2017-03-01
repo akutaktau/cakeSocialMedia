@@ -1,5 +1,5 @@
 <?php
-namespace CakeSocial\View\Helper;
+namespace CakeSocialMedia\View\Helper;
 
 use Cake\View\Helper;
 use Cake\View\View;
