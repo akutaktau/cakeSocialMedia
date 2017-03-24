@@ -41,7 +41,7 @@ class FacebookComponent extends Component {
 			parent::initialize($this->_config);
 			$this->Controller = $this->_registry->getController();
 			$this->Controller->helpers = [
-				'CakeSocial.Facebook' => [
+				'CakeSocialMedia.Facebook' => [
 					
 					'enable' => $this->_config['facebook']['enable'],
 					'app_id' => $this->_config['facebook']['app_id'],
