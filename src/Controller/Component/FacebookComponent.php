@@ -31,7 +31,7 @@ class FacebookComponent extends Component {
 	
 	protected $_config = null;
 	protected $Controller = null;
-	protected $version = 'v2.2';
+	protected $version = 'v2.4';
 	
 	public function initialize(array $config) {	
 		if (!Configure::check('CakeSocial')) {
@@ -71,7 +71,7 @@ class FacebookComponent extends Component {
 		$permissions = ['email']; // Optional permissions
 		$loginUrl = $helper->getLoginUrl($returnConfig['facebook']['callback'], $permissions);
 		
-		return $returnConfig;
+		return $loginUrl;
 	}
 	
 	public function getConfig() {
@@ -98,7 +98,12 @@ class FacebookComponent extends Component {
 		]);
 		
 		$helper = $Facebook->getRedirectLoginHelper();
-
+        if (isset($_GET['state'])) {
+            $helper->getPersistentDataHandler()->set('state', $_GET['state']);
+            
+            $_SESSION['state'] = $_GET['state'];
+        }
+        
 		try {
 		  $accessToken = $helper->getAccessToken();
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
@@ -136,10 +141,10 @@ class FacebookComponent extends Component {
 			
 			// If you know the user ID this access token belongs to, you can validate it here
 			//$tokenMetadata->validateUserId('123');
-			//$tokenMetadata->validateExpiration();
+			$tokenMetadata->validateExpiration();
 
 			if (! $accessToken->isLongLived()) {
-			  // Exchanges a short-lived access token for a long-lived one
+			  //Exchanges a short-lived access token for a long-lived one
 			  try {
 				$accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
 			  } catch (Facebook\Exceptions\FacebookSDKException $e) {
@@ -159,5 +164,35 @@ class FacebookComponent extends Component {
 		$this->_config['facebook']['callback'] = Router::url($this->_config['facebook']['callback'],true);
 		Configure::write('facebook.callback',$this->_config['facebook']['callback']);
 	}
+    
+    public function getUserDetail() {
+        if(!session_id()) {
+			session_start();
+		}
+        $returnConfig = $this->getConfig();
+        
+        $Facebook = new \Facebook\Facebook([
+		 	'app_id' => $returnConfig['facebook']['app_id'],
+			'app_secret' => $returnConfig['facebook']['app_secret'],
+			'default_graph_version' => $this->version,
+		]);
+        $helper = $Facebook->getRedirectLoginHelper();
+        
+        try {
+          // Returns a `Facebook\FacebookResponse` object
+          $response = $Facebook->get('/me?fields=id,name,email', $_SESSION['fb_access_token']);
+          
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+          echo 'Graph returned an error: ' . $e->getMessage();
+          exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+          echo 'Facebook SDK returned an error: ' . $e->getMessage();
+          exit;
+        } 
+
+        $user = $response->getGraphUser();
+       
+        return $user;
+    }
 
 }
