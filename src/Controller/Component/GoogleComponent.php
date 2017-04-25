@@ -77,6 +77,12 @@ class GoogleComponent extends Component {
 		if(!session_id()) {
 			session_start();
 		}
+        
+        if(isset($_GET['code'])){
+            $this->gClient->authenticate($_GET['code']);
+            $session->write('google.token',$this->gClient->getAccessToken());
+            
+        }
 		
         if ($session->check('google.token'))       
             return true;
