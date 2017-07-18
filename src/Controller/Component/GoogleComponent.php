@@ -79,6 +79,19 @@ class GoogleComponent extends Component {
 		}
         
         if(isset($_GET['code'])){
+            //$returnConfig = $this->getConfig();
+        
+        $this->gClient = new \Google_Client();
+        $this->gClient->setApplicationName('RakanMET');
+        $this->gClient->setClientId($returnConfig['google']['app_id']);
+        $this->gClient->setClientSecret($returnConfig['google']['app_secret']);
+        $this->gClient->setRedirectUri($returnConfig['google']['callback']);
+        
+        $this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
+        $this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
+        $this->gClient->addScope('email');
+        $this->gClient->addScope(\Google_Service_Plus::USERINFO_PROFILE);
+        //$plus = new \Google_Service_Plus($this->gClient);
             $this->gClient->authenticate($_GET['code']);
             $session->write('google.token',$this->gClient->getAccessToken());
             
@@ -117,13 +130,13 @@ class GoogleComponent extends Component {
         
         if(isset($_GET['code'])){
             $this->gClient->authenticate($_GET['code']);
-            $session->write('google.token',$this->gClient->getAccessToken());
+            //$session->write('google.token',$this->gClient->getAccessToken());
             
         }
 
         if ($session->check('google.token')) {
             $this->gClient->setAccessToken($session->read('google.token'));
-            
+         
         }
         
         if ($this->gClient->getAccessToken()) {
@@ -163,6 +176,7 @@ class GoogleComponent extends Component {
             ];
 		}
         else {
+            
             $user = [];
         }
         
