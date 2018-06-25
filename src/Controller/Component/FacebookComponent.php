@@ -31,7 +31,7 @@ class FacebookComponent extends Component {
 	
 	protected $_config = null;
 	protected $Controller = null;
-	protected $version = 'v2.4';
+	protected $version = 'v3.0';
 	
 	public function initialize(array $config) {	
 		if (!Configure::check('CakeSocial')) {
