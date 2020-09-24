@@ -60,13 +60,13 @@ class TwitterComponent extends Component
 		return $returnConfig;
 	}
 
-	public function getConfig() {
+	public function getConfig($key = NULL, $default = NULL) {
 	   $this->convertUrl();
 	   return $this->_config;
 	}
 
 	public function login() {
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 		if (!$session->check('twitter')) {
 			$this->loadConfig();
 		}
@@ -95,7 +95,7 @@ class TwitterComponent extends Component
 	}
 
 	public function callback() {
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 		if ($this->request->query('oauth_verifier') && $this->request->query('oauth_token') && $this->request->query('oauth_token') == $session->read('twitter.oauth_token')) {
 			$request_token = [];
 			$request_token['oauth_token'] = $session->read('twitter.oauth_token');
@@ -115,7 +115,7 @@ class TwitterComponent extends Component
 	}
 
 	public function validate() {
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 
 		if ($session->check('twitter.access_token')) {
 			$access_token = $session->read('twitter.access_token');
@@ -143,7 +143,7 @@ class TwitterComponent extends Component
 	}
 
 	public function getUserDetail() {
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 		if ($session->check('twitter.access_token')) {
 			$access_token = $session->read('twitter.access_token');
 
@@ -172,7 +172,7 @@ class TwitterComponent extends Component
 
 	public function sendPost(array $args) {
 		// general method for send status update
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 		$access_token = $session->read('twitter.access_token');
 		if ($session->check('twitter.access_token')) {
 			$connect = new TwitterOAuth($this->getAppId(), $this->getAppSecret(), $access_token['oauth_token'], $access_token['oauth_token_secret']);
