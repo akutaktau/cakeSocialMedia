@@ -61,7 +61,7 @@ class GoogleComponent extends Component {
         $this->gClient->addScope('profile');
         
         $loginUrl = $this->gClient->createAuthUrl();
-        echo $loginUrl;exit;        
+        
         return $loginUrl;
         
 	}
