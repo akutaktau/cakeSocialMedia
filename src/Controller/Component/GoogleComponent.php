@@ -1,9 +1,9 @@
 <?php
 /**
- * CakeSocial GooglePlus Component
+ * CakeSocial Google Component
  * 
  * @author Jasdy Syarman
- * @copyright (c) 2017 syarman.com/soft
+ * @copyright (c) 2020 syarman.com/soft
  * @license MIT
  */
 namespace CakeSocialMedia\Controller\Component;
@@ -43,7 +43,7 @@ class GoogleComponent extends Component {
 	}
    
 	public function login() {
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
         $returnConfig = $this->getConfig();
 		
         if (!$session->check('google.token')) {
@@ -55,17 +55,18 @@ class GoogleComponent extends Component {
         $this->gClient->setClientId($returnConfig['google']['app_id']);
         $this->gClient->setClientSecret($returnConfig['google']['app_secret']);
         $this->gClient->setRedirectUri($returnConfig['google']['callback']);
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
+       // $this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
+       // $this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
         $this->gClient->addScope('email');
+        $this->gClient->addScope('profile');
         
         $loginUrl = $this->gClient->createAuthUrl();
-                
+        echo $loginUrl;exit;        
         return $loginUrl;
         
 	}
 	
-	public function getConfig() {
+	public function getConfig($key = NULL, $default = NULL) {
 	   $this->convertUrl();
 	  
 	   return $this->_config;
@@ -73,7 +74,7 @@ class GoogleComponent extends Component {
 	
 	public function isLogin() {
 		$returnConfig = $this->getConfig();
-		$session = $this->request->session();
+		$session = $this->Controller->getRequest()->getSession();
 		if(!session_id()) {
 			session_start();
 		}
@@ -81,17 +82,18 @@ class GoogleComponent extends Component {
         if(isset($_GET['code'])){
             //$returnConfig = $this->getConfig();
         
-        $this->gClient = new \Google_Client();
-        $this->gClient->setApplicationName('RakanMET');
-        $this->gClient->setClientId($returnConfig['google']['app_id']);
-        $this->gClient->setClientSecret($returnConfig['google']['app_secret']);
-        $this->gClient->setRedirectUri($returnConfig['google']['callback']);
-        
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
-        $this->gClient->addScope('email');
-        $this->gClient->addScope(\Google_Service_Plus::USERINFO_PROFILE);
-        //$plus = new \Google_Service_Plus($this->gClient);
+            $this->gClient = new \Google_Client();
+            $this->gClient->setApplicationName('RakanMET');
+            $this->gClient->setClientId($returnConfig['google']['app_id']);
+            $this->gClient->setClientSecret($returnConfig['google']['app_secret']);
+            $this->gClient->setRedirectUri($returnConfig['google']['callback']);
+            
+            //$this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
+            //$this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
+            $this->gClient->addScope('email');
+            $this->gClient->addScope('profile');
+            //$this->gClient->addScope(\Google_Service_Plus::USERINFO_PROFILE);
+            //$plus = new \Google_Service_Plus($this->gClient);
             $this->gClient->authenticate($_GET['code']);
             $session->write('google.token',$this->gClient->getAccessToken());
             
@@ -113,7 +115,7 @@ class GoogleComponent extends Component {
         if(!session_id()) {
 			session_start();
 		}
-        $session = $this->request->session();
+        $session = $this->Controller->getRequest()->getSession();
         $returnConfig = $this->getConfig();
         
         $this->gClient = new \Google_Client();
@@ -121,17 +123,17 @@ class GoogleComponent extends Component {
         $this->gClient->setClientId($returnConfig['google']['app_id']);
         $this->gClient->setClientSecret($returnConfig['google']['app_secret']);
         $this->gClient->setRedirectUri($returnConfig['google']['callback']);
-        
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_LOGIN);
-        $this->gClient->addScope(\Google_Service_Plus::PLUS_ME);
+       
         $this->gClient->addScope('email');
-        $this->gClient->addScope(\Google_Service_Plus::USERINFO_PROFILE);
-        $plus = new \Google_Service_Plus($this->gClient);
+        $this->gClient->addScope('profile');
         
+        $google_oauthV2 = new \Google_Service_Oauth2($this->gClient);
+        if(isset($token['error'])) {
+           echo  $token['error']; exit;
+        }
         if(isset($_GET['code'])){
-            $this->gClient->authenticate($_GET['code']);
-            //$session->write('google.token',$this->gClient->getAccessToken());
-            
+            $this->gClient->fetchAccessTokenWithAuthCode($_GET['code']);
+        
         }
 
         if ($session->check('google.token')) {
@@ -141,38 +143,17 @@ class GoogleComponent extends Component {
         
         if ($this->gClient->getAccessToken()) {
             
-            $me = $plus->people->get('me');
-            
-            $PlusPersonName = $me->getName();
-           
-            $PlusPersonImage = $me->getImage();
-            $imagePath = $PlusPersonImage->getUrl();
-            
-            $userId = $me->id;
-            
-            $displayName = $me->displayName;
-            
-          
-            $PlusPersonEMails = $me->getEmails();
-            
-            $i = 0;
-            foreach ($PlusPersonEMails as $emails) {
-                $email[$i] = array(
-                    'email' => $emails->value,
-                    'type' => $emails->type
-                );
-                $i++;
-            }
-            
+            $me = $google_oauthV2->userinfo->get();
+                        
             $user = [
-                'id' => $userId,
-                'displayName' => $displayName,
-                'image' => $imagePath,
+                'id' => $me['id'],
+                'displayName' => $me['name'],
+                'image' => $me['picture'],
                 'personName' => array(
-                    'givenName' => $PlusPersonName->getGivenName(), 
-                    'familyName' => $PlusPersonName->getFamilyName()
+                    'givenName' => $me['given_name'], 
+                    'familyName' => $me['family_name']
                 ),
-                'email' => $email,
+                'email' => $me['email'],
             ];
 		}
         else {
