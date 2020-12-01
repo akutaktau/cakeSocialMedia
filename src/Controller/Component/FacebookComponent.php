@@ -74,7 +74,7 @@ class FacebookComponent extends Component {
 		return $loginUrl;
 	}
 	
-	public function getConfig() {
+	public function getConfig($key = NULL, $default = NULL) {
 	   $this->convertUrl();
 	  
 	   return $this->_config;
